@@ -207,7 +207,7 @@
                     },
                     allComments: [],
                     settings: {
-                        owner: defaultOwner[this.type],
+                        owner: defaultOwner[defaultType],
                         repo: 'gitx-simple-db',
                         access_token: loadToken(tokenName[defaultType]),
                     },
@@ -221,13 +221,13 @@
                 }
             },
             watch: {
-                type: function() {
-                    localStorage.setItem("gitx_type", this.type)
+                type: function(newV) {
                     this.startDemo = false
                     this.settings.access_token = loadToken(tokenName[this.type])
                     if (!this.settings.access_token) {
                         this.dealSearchParams()
                     }
+                    this.settings.owner = defaultOwner[newV]
                 },
                 
             },
