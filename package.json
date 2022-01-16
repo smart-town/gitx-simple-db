@@ -1,0 +1,40 @@
+{
+  "name": "gitee-simple-db",
+  "version": "0.0.1",
+  "description": "Use gitee project issues as a simple database system.",
+  "main": "dist/gitdb.js",
+  "scripts": {
+    "test": "jest",
+    "test-c": "jest --coverage",
+    "dev": "rollup -c -w",
+    "build": "roolup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/lhhcherry/gitee-simple-db.git"
+  },
+  "type": "module",
+  "author": "smalltown",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.1.1",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "@types/jest": "^27.4.0",
+    "@types/node-fetch": "2.5.12",
+    "jest": "^27.4.5",
+    "rollup": "^2.62.0",
+    "ts-jest": "^27.1.2",
+    "tslib": "*",
+    "typescript": "^4.5.4",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
+  },
+  "types": "src/index.d.ts",
+  "dependencies": {
+    "@rollup/plugin-replace": "^3.0.1",
+    "is-plain-object": "^5.0.0",
+    "node-fetch": "2.6.6"
+  }
+}

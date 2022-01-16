@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowJs": true,
+        "outDir": "dist/compiled",
+        "target": "ES2015"
+    }
+}
