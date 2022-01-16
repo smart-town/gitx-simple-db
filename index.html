@@ -52,7 +52,9 @@
                       <a class="dropdown-item" @click="type = 'gitee'">gitee</a>
                       <a class="dropdown-item" @click="type = 'github'">github</a>
                     </div>
-                </div> 将指定仓库的 issue 作为简单的表进行数据存储更改等。</p>
+                </div>将指定仓库的 issue 作为简单的表进行数据存储更改等。
+                <a href="https://github.com/apps/gitxdbapp" v-if="type === 'github'">首次使用需要安装应用</a>
+            </p>
               <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text width-control-desc desc-label">仓库库主</span>
@@ -71,12 +73,12 @@
                 </div>
                 <input class="form-control" :value="authInfo.code">
               </div>
-              <div class="input-group" v-if="authInfo.state">
+              <!-- <div class="input-group" v-if="false">
                 <div class="input-group-prepend">
                     <span class="input-group-text width-control-desc desc-label">STATE</span>
                 </div>
                 <input class="form-control" :value="authInfo.state">
-              </div>
+              </div> -->
               <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text width-control-desc desc-label">授权码</span>
@@ -373,10 +375,6 @@
                     }
                     
                     if (!this.authInfo.code) {
-                        if (this.type === 'github') {
-                            window.location.replace('https://github.com/apps/gitxdbapp')
-                            return
-                        }
                         window.location.assign(authUrl)
                     } else {
                         let data = {
