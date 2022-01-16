@@ -103,7 +103,6 @@
             </template>
         </ul>
 
-        <!-- <pre>{{JSON.stringify(currentUserInfo, null, 2)}}</pre> -->
         <div>
             <div class="row">
                 <div class="mt-2 col-12 col-sm-12 col-md-4 d-flex justify-content-center">
@@ -132,20 +131,14 @@
         <h5>从表[{{addComment.issueName ? `${addComment.issueName}` : ''}}]中查询数据</h5>
         <div class="list-group">
             <li v-for="comment in allComments" :key="comment.id" class="list-group-item comment-item">
-                
                 {{comment.body}}
-                <!-- &nbsp;{{typeof comment.body}} -->
-                    <!-- <button type="button" class="close" @click="deleteComment(comment.id)" aria-label="关闭">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <button class="ml-1 btn btn-sm btn-outline-warn float-left" @click="updateComment(comment.id)" aria-label="关闭">更新</button> -->
-                    <div class="comment-operation">
-                        <img :src='comment.user.avatar_url' style="border-radius:10px;width:20px;height: 20px;" :title='comment.user.name'/>
-                        <template v-if="comment.user.id === currentUserInfo.id">
-                            <button class="ml-1 btn btn-sm" @click="updateComment(comment.id)">✍</button>
-                            <button class="ml-1 btn btn-sm" @click="deleteComment(comment.id)">➖</button>
-                        </template>
-                    </div>
+                <div class="comment-operation">
+                    <img :src='comment.user.avatar_url' style="border-radius:10px;width:20px;height: 20px;" :title='comment.user.name'/>
+                    <template v-if="comment.user.id === currentUserInfo.id">
+                        <button class="ml-1 btn btn-sm" @click="updateComment(comment.id)">✍</button>
+                        <button class="ml-1 btn btn-sm" @click="deleteComment(comment.id)">➖</button>
+                    </template>
+                </div>
             </li>
         </div>
         </div>
@@ -178,11 +171,10 @@
         if (test) {
             throw Error('test is ture, terminate script load.')
         }
-        var gitdbSettings = ""
        
         var onceFlag = true
 
-        let defaultType = localStorage.getItem("gitx_type") || "gitee";
+        let defaultType = "gitee";
         if (location.href.indexOf('github.io') !== -1) {
             defaultType = "github"
         }
@@ -194,6 +186,11 @@
             'gitee': 'https://gitee.com/api/v5',
             'github': 'https://api.github.com'
         }
+        const defaultOwner = {
+            "gitee": "lhhcherry",
+            "github": "smart-town",
+        }
+        
         const reset = function () {
             window.location.replace(window.location.href.replace(/\?.*/, ""))
         }
@@ -209,9 +206,8 @@
                         content: ''
                     },
                     allComments: [],
-                    gitdbSettings: undefined,
                     settings: {
-                        owner: 'lhhcherry',
+                        owner: defaultOwner[type],
                         repo: 'gitx-simple-db',
                         access_token: loadToken(tokenName[defaultType]),
                     },
@@ -221,7 +217,7 @@
                     },
                     startDemo: false,
                     currentUserInfo: null,
-                    gitdb: null, // 记录当前正在使用的 gitdb instance
+                    gitdb: null,
                 }
             },
             watch: {
@@ -232,7 +228,6 @@
                     if (!this.settings.access_token) {
                         this.dealSearchParams()
                     }
-                    // console.log("CHANGE access_token:", loadToken(tokenName[this.type]))
                 },
                 
             },
