@@ -24,7 +24,7 @@
 
 ### 快速体验
 
-访问 [github](https://github.com/apps/gitxdbapp) 或 [gitee](https://lhhcherry.gitee.io/ssmell/gitxdb/) Pages 服务，授权以体验（其实就相当于一个 issue 的三方客户端），**注意**需要安装 github 的应用，才能授权执行 api 操作。
+访问 [github](https://smart-town.github.io/gitx-simple-db/) 或 [gitee](https://lhhcherry.gitee.io/ssmell/gitxdb/) Pages 服务，授权以体验（其实就相当于一个 issue 的三方客户端），**注意**需要安装 github 的应用，才能授权执行 api 操作。
 
 ### 快速使用
 

@@ -380,6 +380,9 @@
                         if (this.type === 'gitee') {
                             data['redirect_uri'] = redirect_uri
                         }
+                        if (this.type === 'github') {
+                            window.location.replace('https://github.com/apps/gitxdbapp')
+                        }
                         
                         fetch(getAccessTokenUrl + `?${new URLSearchParams(data).toString()}`).then(async v => {
                             if (v.status !== 200) {
