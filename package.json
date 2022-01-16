@@ -7,7 +7,7 @@
     "test": "jest",
     "test-c": "jest --coverage",
     "dev": "rollup -c -w",
-    "build": "roolup -c"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
