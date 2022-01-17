@@ -32,12 +32,17 @@ function toErrorMessage(data: any) {
 
 export interface FeatOption {
     withHeader?: boolean,
+    fresh?: boolean,
 }
-export const fetchWrapper = async (url: string, options: RequestInit, feat: FeatOption={withHeader: false}): Promise<any> => {
+export const fetchWrapper = async (url: string, options: RequestInit, feat: FeatOption={withHeader: false, fresh: true}): Promise<any> => {
     if (!options.method) {
         options.method = "GET"
     }
+
     if ("GET" === options.method && isPlainObject(options.body)){
+        if (feat.fresh) {
+            options.body['GITXRANDOM'] = new Date().getTime()
+        }
         url = `${url}?${new URLSearchParams(<any>options.body).toString()}`
         delete options.body
     }

@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestGitDB</title>
+    <title>GitXDBDemo</title>
+    <script src="https://unpkg.com/vue@next"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
     <style>
         .width-control-desc {
@@ -39,7 +41,7 @@
 
 <body class="container">
     <div id="root">
-        <div :class="['card', 'typebackground', currentUserInfo ? '' : `${type}-img`]" :style="{'background-image': currentUserInfo && `url(${currentUserInfo.avatar_url})`}">
+        <div :class="['card', 'typebackground', 'mt-2', currentUserInfo ? '' : `${type}-img`]" :style="{'background-image': currentUserInfo && `url(${currentUserInfo.avatar_url})`}">
             <!-- <img src="..." class="card-img-top" alt="..."> -->
             <div class="card-body">
               <h5 class="card-title">GitXDB Demo</h5>
@@ -73,12 +75,6 @@
                 </div>
                 <input class="form-control" :value="authInfo.code">
               </div>
-              <!-- <div class="input-group" v-if="false">
-                <div class="input-group-prepend">
-                    <span class="input-group-text width-control-desc desc-label">STATE</span>
-                </div>
-                <input class="form-control" :value="authInfo.state">
-              </div> -->
               <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text width-control-desc desc-label">授权码</span>
@@ -96,7 +92,7 @@
             </div>
           </div>
         <div v-show="startDemo">
-        <h5>All Issues:</h5>
+        <h5 class="mt-2">All ISSUES:</h5>
         <ul class="list-group">
             <template v-for="(table, name) in allIssues" :key="table.number">
                 <li class="list-group-item" :title="table.title"><a :href="table.html_url" target="_blank">{{name}}</a>：{{table.body}}</li>
@@ -128,7 +124,7 @@
             </div>
             <input class="form-control" v-model="addComment.content">
         </div>
-        <h5>从表[{{addComment.issueName ? `${addComment.issueName}` : ''}}]中查询数据</h5>
+        <h5 class="mt-2">从表[{{addComment.issueName ? `${addComment.issueName}` : ''}}]中查询数据</h5>
         <div class="list-group">
             <li v-for="comment in allComments" :key="comment.id" class="list-group-item comment-item">
                 {{comment.body}}
@@ -143,33 +139,15 @@
         </div>
         </div>
     </div>
-    <!-- jQuery and JavaScript Bundle with Popper -->
     <script src="./dist/gitdb_bundle.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
-    <!-- jQuery and JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@next"></script>
     <script>
-        function loadToken(token_name="giteedb_access_token") {
-            let token = localStorage.getItem(token_name)
-            if (!token || !token.trim()) {
-                return 
-            }
+        
 
-            let tokenExpired = localStorage.getItem(`${token_name}_expired`)
-            let expiredDate = parseInt(tokenExpired)
-            if (new Date().getTime() > expiredDate) {
-                console.log("expired, use refresh_token is in the progress.")
-                return "";
-            } else {
-                return token
-            }
-        }
-
-        var test = false;
+        var test = true;
         if (test) {
-            throw Error('test is ture, terminate script load.')
+            console.log("%ctest mode", "background: gray; color: white; padding: 2px 5px;")
         }
        
         var onceFlag = true
@@ -186,13 +164,49 @@
             'gitee': 'https://gitee.com/api/v5',
             'github': 'https://api.github.com'
         }
-        const defaultOwner = {
-            "gitee": "lhhcherry",
-            "github": "smart-town",
+
+        const giteeConsts = {
+            owner: "lhhcherry",
+            redirect_uri: 'https://lhhcherry.gitee.io/ssmell/',
+            client_id: 'e8db1dcfd00bf405429813d2703cbf10f99b4ae204fcf01385dfb2e484e8d3be',
+            auth_url_base: "https://gitee.com/oauth",
         }
-        
+        const githubConsts = {
+            owner: 'smart-town',
+            client_id: 'Iv1.bbd60b3d2083e187',
+            auth_url_base: "https://github.com/login/oauth",
+            redirect_uri: "https://smart-town.github.io/gitx-simple-db/",
+        }
+
+        if (test) {
+            console.log("test mode, set redirect_uri")
+            giteeConsts.redirect_uri = githubConsts.redirect_uri = 'http://192.168.31.8:8000/'
+        }
+        const Default = {
+            gitee: giteeConsts,
+            github: githubConsts,
+        }
+        // const getAccessTokenUrl = 'https://service-osylcc6l-1302417315.cd.apigw.tencentcs.com/release' + '/access_token'
+        const getAccessTokenUrl = 'http://192.168.31.8:5000/access_token'
+
+
         const reset = function () {
             window.location.replace(window.location.href.replace(/\?.*/, ""))
+        }
+        function loadToken(token_name="giteedb_access_token") {
+            let token = localStorage.getItem(token_name)
+            if (!token || !token.trim()) {
+                return 
+            }
+
+            let tokenExpired = localStorage.getItem(`${token_name}_expired`)
+            let expiredDate = parseInt(tokenExpired)
+            if (new Date().getTime() > expiredDate) {
+                console.log("expired, use refresh_token is in the progress.")
+                return "";
+            } else {
+                return token
+            }
         }
         const DemoOptions = {
             data() {
@@ -207,7 +221,7 @@
                     },
                     allComments: [],
                     settings: {
-                        owner: defaultOwner[defaultType],
+                        owner: Default[defaultType].owner,
                         repo: 'gitx-simple-db',
                         access_token: loadToken(tokenName[defaultType]),
                     },
@@ -227,7 +241,7 @@
                     if (!this.settings.access_token) {
                         this.dealSearchParams()
                     }
-                    this.settings.owner = defaultOwner[newV]
+                    this.settings.owner = Default[newV].owner
                 },
                 
             },
@@ -246,11 +260,15 @@
                     }
                 },
                 dealSearchParams: function() {
-                    let searchParams = new URLSearchParams(window.location.search)
-                    console.log("Search Params:", searchParams)
-                    let code = searchParams.get("code")
-                    let state = searchParams.get("state")
-                    this.authInfo = {code, state}
+                    if (window.location.search) {
+                        let searchParams = new URLSearchParams(window.location.search)
+                        let code = searchParams.get("code")
+                        let state = searchParams.get("state")
+                        if (code && state) {
+                            this.authInfo = {code, state}
+                            window.history.pushState(JSON.stringify(this.authInfo), "", window.location.href.replace(/\?.*/, ""))
+                        }
+                    }
                 },
                 deleteComment: function(id) {
                     console.log("prepare delte id:", id)
@@ -274,18 +292,27 @@
                     }
                 },
                 begindemo: async function() {
-                    console.log("gitdb:", this.gitdb)
-                    this.gitdb = gitdb.GitXSimpleDB.getInstance({
-                        option: {...this.settings, hostBase: this.type === 'gitee' ? 'https://gitee.com/api/v5' : 'https://api.github.com'},
-                        newForce: true,
-                    })
+                    let shouldCreate = true
+                    if (this.gitdb) {
+                        let {repo, owner} = this.gitdb.options
+                        shouldCreate = repo !== this.settings.repo || owner !== this.settings.owner
+                        if (shouldCreate) {
+                            this.gitdb.options.repo = this.settings.repo
+                            this.gitdb.options.owner = this.settings.owner
+                        }
+                    }
+                    if (shouldCreate) {
+                        this.gitdb = gitdb.GitXSimpleDB.getInstance({
+                            option: {...this.settings, hostBase: host[this.type]},
+                            newForce: true,
+                        })
+                        console.log("created gitdb:", this.gitdb)
+
+                    }
                     try {
                         let user = await this.gitdb.fetch.rawRequest(`${host[this.type]}/user`, {})
                         this.currentUserInfo = user
-                        if (gitdb.GitXSimpleDB.instances.length > 5) {
-                            reset()
-                        }
-                        this.getAllIssues()
+                        await this.getAllIssues()
                     } catch (e) {
                         console.error(e)
                         alert(e.message || e.error_description || e.error || "初始化失败")
@@ -297,9 +324,15 @@
                         this.allIssues = this.gitdb.global.tables
                         let allIssuesName = Object.keys(this.allIssues)
                         if (!allIssuesName.length) {
+                            if (this.created) {
+                                window.alert("已创建成功，请刷新后重试")
+                                reset()
+                                return;
+                            }
                             let sure = window.confirm("No issues, Auto create one?")
                             if (!sure) return
                             this.addTable("gixdb_demo", "^_^").then(v => {
+                                this.created = true
                                 this.getAllIssues()
                             }).catch(e => {
                                 alert(e.message || e.error_description || "create err")
@@ -310,6 +343,9 @@
                         this.startDemo = true
                     }).catch(e => {
                         console.error(e)
+                        if (e.message && e.message.indexOf("Failed to fetch") !== -1) {
+                            reset()
+                        }
                         
                         alert(`Not authorized or repo [${this.settings.owner}/${this.settings.repo}] not exists.`)
                         let use = window.confirm("Auto Use your repo?")
@@ -351,22 +387,12 @@
                     }
                 },
                 doSettings: function() {
-                    
-
                     const state = "GITXDB"
-
-                    const redirect_uri = this.type === 'gitee' ? 'https://lhhcherry.gitee.io/ssmell/' : 'https://smart-town.github.io/gitx-simple-db/'
-                    // const getAccessTokenUrl = 'http://192.168.31.8:5000' + '/access_token'
-                    const getAccessTokenUrl = 'https://service-osylcc6l-1302417315.cd.apigw.tencentcs.com/release' + '/access_token'
-
-                    let client_id = 'e8db1dcfd00bf405429813d2703cbf10f99b4ae204fcf01385dfb2e484e8d3be'
-                    let hostbase = "https://gitee.com/oauth"
-                    let authUrl = `${hostbase}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${state}`;
-
+                    const {client_id, redirect_uri, auth_url_base,} = Default[this.type]
+                    
+                    let authUrl = `${auth_url_base}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${state}`;
                     if (this.type === 'github') {
-                        hostbase = "https://github.com/login/oauth"
-                        client_id = 'Iv1.bbd60b3d2083e187'
-                        authUrl = `${hostbase}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`
+                        authUrl = `${auth_url_base}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`
                     }
                     
                     if (!this.authInfo.code) {
@@ -379,8 +405,6 @@
                         if (this.type === 'gitee') {
                             data['redirect_uri'] = redirect_uri
                         }
-                        
-                        
                         fetch(getAccessTokenUrl + `?${new URLSearchParams(data).toString()}`).then(async v => {
                             if (v.status !== 200) {
                                 console.log("resp raw:", v)
@@ -404,8 +428,8 @@
                                     localStorage.setItem("githubdb_access_token", v.access_token)
                                     localStorage.setItem("githubdb_access_token_scope", v.scope)
                                     localStorage.setItem("githubdb_access_token_expired", new Date().getTime() + v.expires_in * 1000)
-                                    localStorage.setItem("githubdb_access_token_refresh", v.refresh_token * 1000)
-                                    localStorage.setItem("githubdb_access_token_refresh_expired", v.refresh_token_expires_in)
+                                    localStorage.setItem("githubdb_access_token_refresh", v.refresh_token)
+                                    localStorage.setItem("githubdb_access_token_refresh_expired", v.refresh_token_expires_in * 1000)
                                 } else {
                                     alert("not support type:", this.type)
                                 }
@@ -414,7 +438,9 @@
                             }
                         }).catch(e => {
                             console.log("request accesstoken err", e)
-                            alert(e.message || e.error_description || e.error || "Something Error")
+                            let errorInfo = e.message || e.error_description || e.error || "Something Error"
+                            alert(errorInfo)
+                            if (errorInfo.indexOf("expired") !== -1 || errorInfo.indexOf("过期") !== -1)
                             window.location.reload()
                         })
                     }
