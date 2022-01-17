@@ -122,11 +122,14 @@ var gitdb = (function () {
         }
         return `Unknown error: ${JSON.stringify(data)}`;
     }
-    const fetchWrapper = (url, options, feat = { withHeader: false }) => __awaiter(void 0, void 0, void 0, function* () {
+    const fetchWrapper = (url, options, feat = { withHeader: false, fresh: true }) => __awaiter(void 0, void 0, void 0, function* () {
         if (!options.method) {
             options.method = "GET";
         }
         if ("GET" === options.method && isPlainObject(options.body)) {
+            if (feat.fresh) {
+                options.body['GITXRANDOM'] = new Date().getTime();
+            }
             url = `${url}?${new URLSearchParams(options.body).toString()}`;
             delete options.body;
         }

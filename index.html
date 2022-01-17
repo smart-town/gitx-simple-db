@@ -143,9 +143,8 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        
-
-        var test = true;
+        // 本地环境通常带端口号，而生产环境并不带，以此设置 test 标志。
+        var test = window.location.port !== '';
         if (test) {
             console.log("%ctest mode", "background: gray; color: white; padding: 2px 5px;")
         }
@@ -187,13 +186,14 @@
             github: githubConsts,
         }
         // const getAccessTokenUrl = 'https://service-osylcc6l-1302417315.cd.apigw.tencentcs.com/release' + '/access_token'
-        const getAccessTokenUrl = 'http://192.168.31.8:5000/access_token'
+        const getAccessTokenUrl = test ? 'http://192.168.31.8:5000/access_token' : 'https://service-osylcc6l-1302417315.cd.apigw.tencentcs.com/release/access_token'
 
 
         const reset = function () {
             window.location.replace(window.location.href.replace(/\?.*/, ""))
         }
-        function loadToken(token_name="giteedb_access_token") {
+        function loadToken(type=defaultType) {
+            let token_name = tokenName[type]
             let token = localStorage.getItem(token_name)
             if (!token || !token.trim()) {
                 return 
@@ -201,7 +201,8 @@
 
             let tokenExpired = localStorage.getItem(`${token_name}_expired`)
             let expiredDate = parseInt(tokenExpired)
-            if (new Date().getTime() > expiredDate) {
+            let current = new Date().getTime()
+            if (current > expiredDate) {
                 console.log("expired, use refresh_token is in the progress.")
                 return "";
             } else {
@@ -212,7 +213,6 @@
             data() {
                 return {
                     type: defaultType,
-                    title: 'Test For Gitdb',
                     data: '',
                     allIssues: {},
                     addComment: {
@@ -223,7 +223,7 @@
                     settings: {
                         owner: Default[defaultType].owner,
                         repo: 'gitx-simple-db',
-                        access_token: loadToken(tokenName[defaultType]),
+                        access_token: loadToken(defaultType),
                     },
                     authInfo: {
                         code: '',
@@ -237,7 +237,7 @@
             watch: {
                 type: function(newV) {
                     this.startDemo = false
-                    this.settings.access_token = loadToken(tokenName[this.type])
+                    this.settings.access_token = loadToken(this.type)
                     if (!this.settings.access_token) {
                         this.dealSearchParams()
                     }
