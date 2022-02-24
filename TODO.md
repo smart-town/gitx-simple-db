@@ -1,2 +1,3 @@
 - [] github issue 的 comments 列表 api 没有排序选项，只会按照 ID asc 排序。需要特别处理
 - [] issue 评论达到上限时的处理（主要是 github)
+- [] 切换 gitee/github 时清除授权内容

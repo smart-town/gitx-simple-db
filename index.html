@@ -44,7 +44,7 @@
         <div :class="['card', 'typebackground', 'mt-2', currentUserInfo ? '' : `${type}-img`]" :style="{'background-image': currentUserInfo && `url(${currentUserInfo.avatar_url})`}">
             <!-- <img src="..." class="card-img-top" alt="..."> -->
             <div class="card-body">
-              <h5 class="card-title">GitXDB Demo</h5>
+              <h5 class="card-title"><a :href="currentRepoLink">GitXDB Demo</a></h5>
               <p class="card-text"> 
                 <div class="btn-group" role="group">
                     <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -229,6 +229,7 @@
                         code: '',
                         state: '',
                     },
+                    currentRepoLink: defaultType === 'gitee' ? 'https://gitee.com/lhhcherry/gitx-simple-db' : 'https://github.com/smart-town/gitx-simple-db',
                     startDemo: false,
                     currentUserInfo: null,
                     gitdb: null,
